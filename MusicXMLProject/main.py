@@ -1,5 +1,11 @@
 from math import log2
 from pymusicxml import *
+import serial
+import io
+
+with serial.Serial('/dev/ttyS1', 19200, timeout=1) as ser:
+    line = ser.readline()
+    print(line)
 
 finished = False
 listNote = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
