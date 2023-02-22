@@ -4,41 +4,35 @@
 #include <SD.h>
 #include <SerialFlash.h>
 
-#include "guitar_a2_note.h"
-
 //---------------------------------------------------------------------------------------
-AudioAnalyzeNoteFrequency notefreq;
-AudioOutputAnalog         dac;
-AudioPlayMemory           wav_note;
-AudioMixer4               mixer;
+AudioAnalyzeNoteFrequency	notefreq;
+AudioAnalyzeRMS					 rms;
+AudioInputI2S					i2s1;
+AudioMixer4					   mixer;
+AudioControlSGTL5000		sgtl5000;
 //---------------------------------------------------------------------------------------
-AudioConnection patchCord0(wav_note, 0, mixer, 0);
+AudioConnection patchCord0(i2s1, 0, mixer, 0);
 AudioConnection patchCord1(mixer, 0, notefreq, 0);
-AudioConnection patchCord2(wav_note, 0, dac, 0);
+AudioConnection patchCord2(i2s1, 0, rms, 0);
 //---------------------------------------------------------------------------------------
-
-IntervalTimer playNoteTimer;
-
-void playNote(void) {
-	if (!wav_note.isPlaying()) {
-		wav_note.play(guitar_a2_note);
-	}
-}
 
 void setup() {
 	Serial.begin(9600);
-	AudioMemory(8);
+	AudioMemory(30);
 
 	notefreq.begin(.15);
 
-	playNoteTimer.priority(144);
-	playNoteTimer.begin(playNote, 1000);
+	sgtl5000.enable();
+	sgtl5000.volume(0.5);
+	sgtl5000.inputSelect(AUDIO_INPUT_MIC);
+	sgtl5000.micGain(36);
 }
 
 void loop() {
 	if (notefreq.available()) {
 		float note = notefreq.read();
 		float prob = notefreq.probability();
-		Serial.printf("Note: %3.2f | Probability: %.2f\n", note, prob);
+		float amp = rms.read();
+		Serial.printf("%3.2f,%.2f,%.2f\n", note, prob, amp);
 	}
 }
