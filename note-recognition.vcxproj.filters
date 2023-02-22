@@ -16,10 +16,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="note-recognition.ino" />
-    <ClCompile Include="MyDsp.cpp">
+    <ClCompile Include="guitar_a2_note.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MyDsp.h">
+    <ClCompile Include="guitar_a2_note.h">
       <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
