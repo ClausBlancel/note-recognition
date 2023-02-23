@@ -7,7 +7,7 @@
 	<identification>
 		<creator type="composer">Teensy</creator>
 		<encoding>
-			<encoding-date>2023-02-22</encoding-date>
+			<encoding-date>2023-02-23</encoding-date>
 			<software>pymusicxml</software>
 		</encoding>
 	</identification>
@@ -49,27 +49,7 @@
 			</note>
 			<note>
 				<pitch>
-					<step>D</step>
-					<alter>0</alter>
-					<octave>4</octave>
-				</pitch>
-				<duration>1</duration>
-				<voice>1</voice>
-				<type>quarter</type>
-			</note>
-			<note>
-				<pitch>
-					<step>E</step>
-					<alter>0</alter>
-					<octave>4</octave>
-				</pitch>
-				<duration>1</duration>
-				<voice>1</voice>
-				<type>quarter</type>
-			</note>
-			<note>
-				<pitch>
-					<step>D</step>
+					<step>C</step>
 					<alter>0</alter>
 					<octave>4</octave>
 				</pitch>
@@ -89,7 +69,37 @@
 			</note>
 			<note>
 				<pitch>
+					<step>D</step>
+					<alter>0</alter>
+					<octave>4</octave>
+				</pitch>
+				<duration>1</duration>
+				<voice>1</voice>
+				<type>quarter</type>
+			</note>
+			<note>
+				<pitch>
+					<step>D</step>
+					<alter>0</alter>
+					<octave>4</octave>
+				</pitch>
+				<duration>2</duration>
+				<voice>1</voice>
+				<type>half</type>
+			</note>
+			<note>
+				<pitch>
 					<step>E</step>
+					<alter>0</alter>
+					<octave>4</octave>
+				</pitch>
+				<duration>1</duration>
+				<voice>1</voice>
+				<type>quarter</type>
+			</note>
+			<note>
+				<pitch>
+					<step>D</step>
 					<alter>0</alter>
 					<octave>4</octave>
 				</pitch>

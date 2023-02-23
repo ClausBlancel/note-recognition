@@ -16,12 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="note-recognition.ino" />
-    <ClCompile Include="guitar_a2_note.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="guitar_a2_note.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.note-recognition.vsarduino.h">
