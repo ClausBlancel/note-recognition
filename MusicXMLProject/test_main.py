@@ -25,13 +25,9 @@ part.append(measure)
 root.append(part)
 
 
-tempo = 80
-timeBetweenNote = (60 / tempo) / 2
-firstNote = True
+tempo = 120
+timeBetweenCroche = (60 / tempo) / 2
 firstTime = True
-thisNote = 0
-lastAmpli = 0
-nbCroches = 0
 lastFreq = 0
 
 
@@ -86,7 +82,7 @@ def modifierNote(d, freq):
         last_duration = last_note.find("duration")
         last_duration.text = str(d)  # la nouvelle valeur de duration
         last_type = last_note.find("type")
-        listNote = {0.5 : "eighth", 1 : "quarter", 2 : "half", 4 : "whole"}
+        listNote = {1: "eighth", 2 : "quarter", 4 : "half", 8 : "whole"}
         print("-----", listNote[d], "-----", freq)
         last_type.text = listNote[d]
         # Enregistrer les modifications dans le fichier XML
@@ -94,64 +90,49 @@ def modifierNote(d, freq):
     else:
         print("Le fichier ne contient pas de notes.")
 
-while True:
-    with serial.Serial('COM3', 9600, timeout=1) as ser:
-        line = ser.readline()
-        # print("line =", line)
+try:
+    while True:
+        with serial.Serial('COM3', 9600, timeout=1) as ser:
+            line = ser.readline()
+            # print("line =", line)
+            
         
-    
-    if line != b'': 
-        line = str(line)[2:]
-        line = line[:len(line)-3]
-        print(line)
-        freq, proba, ampli, peak = line.split(",")
+        if line != b'': 
+            line = str(line)[2:]
+            line = line[:len(line)-3]
+            print(line)
+            freq, proba, ampli, peak = line.split(",")
 
-        freq = float(freq)
-        proba = float(proba)
-        ampli = float(ampli)
-        peak = float(peak)
-
-
-        now = time.time()        
-        print(timeBetweenNote, abs(thisNote - now))  
-        if abs(thisNote - now) > timeBetweenNote:
-            if (peak > 0.9 or abs(lastFreq - freq) > 5) and proba > 0.9:
-                procCreateNote = threading.Thread(target=createNote, args=(0.5, freq,))
-                procCreateNote.start()
+            freq = float(freq)
+            proba = float(proba)
+            ampli = float(ampli)
+            peak = float(peak)
+                   
+            # print(timeBetweenNote, abs(thisNote - absoluteTimeNoteBefore))  
+            if peak > 0.9:     
                 if not firstTime:
-                    thisNote += timeBetweenNote
+                    timeBetweenLastNoteDetected = absoluteTimeNoteBefore - time.time() 
+                    print("timeBetweenLastNoteDetected = ", abs(timeBetweenLastNoteDetected))
+                    nbTemps = round(abs(timeBetweenLastNoteDetected / timeBetweenCroche))
+                    if nbTemps in [2,4,8]:
+                        absoluteTimeNoteBefore = time.time()
+                        procModifyNote = threading.Thread(target=modifierNote,args=(int(nbTemps), lastFreq, )) 
+                        procModifyNote.start()
+                    if nbTemps in [1,2,4,8]:
+                        absoluteTimeNoteBefore = time.time()
+                        procCreateNote = threading.Thread(target=createNote, args=(0.5, freq,))
+                        procCreateNote.start()
+                        lastFreq = freq
                 else:
-                    thisNote = now
+                    lastFreq = freq
+                    absoluteTimeNoteBefore = time.time()
                     firstTime = False
-                # createNote(0.5, freq)
-                lastAmpli = ampli
-                # print("Last Ampli = ", lastAmpli)
-                nbCroches = 1
-                thisNote = now
-                lastFreq = freq
+                    procCreateNote = threading.Thread(target=createNote, args=(0.5, freq,))
+                    procCreateNote.start() 
                 
-            else:
-                if nbCroches == 1: 
-                    procModifyNote = threading.Thread(target=modifierNote,args=(1, freq, )) 
-                    procModifyNote.start()
-                    # modifierNote(1, freq)
-                    lastAmpli = ampli
                     
-                    
-                elif nbCroches == 3:
-                    procModifyNote = threading.Thread(target=modifierNote,args=(2, freq,)) 
-                    procModifyNote.start()
-                    # modifierNote(2, freq)
-                    lastAmpli = ampli
-                    
-                elif nbCroches == 7:
-                    procModifyNote = threading.Thread(target=modifierNote,args=(4, freq,)) 
-                    procModifyNote.start()  
-                    # modifierNote(4, freq)
-                    lastAmpli = ampli
-                    
-                nbCroches += 1
-                print(nbCroches)
-                thisNote += timeBetweenNote
-                lastFreq = freq
-                
+except:
+    timeBetweenLastNoteDetected = absoluteTimeNoteBefore - time.time() 
+    nbTemps = round(abs(timeBetweenLastNoteDetected / timeBetweenCroche))
+    procModifyNote = threading.Thread(target=modifierNote,args=(nbTemps, lastFreq, ))
+    

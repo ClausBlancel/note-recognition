@@ -20,7 +20,6 @@
 			</midi-instrument>
 		</score-part>
 	</part-list>
-	<part id="P1" />
 	<part id="P1">
 		<measure number="1">
 			<note>
@@ -29,7 +28,16 @@
 					<alter>0</alter>
 					<octave>4</octave>
 				</pitch>
-				<duration>1</duration>
+				<duration>2</duration>
+				<type>quarter</type>
+			</note>
+			<note>
+				<pitch>
+					<step>D</step>
+					<alter>0</alter>
+					<octave>3</octave>
+				</pitch>
+				<duration>2</duration>
 				<type>quarter</type>
 			</note>
 			<note>
@@ -39,60 +47,24 @@
 					<octave>4</octave>
 				</pitch>
 				<duration>2</duration>
-				<type>half</type>
-			</note>
-			<note>
-				<pitch>
-					<step>D</step>
-					<alter>0</alter>
-					<octave>4</octave>
-				</pitch>
-				<duration>1</duration>
 				<type>quarter</type>
 			</note>
 			<note>
 				<pitch>
-					<step>E</step>
+					<step>F</step>
 					<alter>0</alter>
 					<octave>4</octave>
 				</pitch>
 				<duration>2</duration>
-				<type>half</type>
-			</note>
-			<note>
-				<pitch>
-					<step>D</step>
-					<alter>0</alter>
-					<octave>4</octave>
-				</pitch>
-				<duration>2</duration>
-				<type>half</type>
-			</note>
-			<note>
-				<pitch>
-					<step>C</step>
-					<alter>0</alter>
-					<octave>4</octave>
-				</pitch>
-				<duration>1</duration>
 				<type>quarter</type>
 			</note>
 			<note>
 				<pitch>
-					<step>E</step>
+					<step>F</step>
 					<alter>0</alter>
 					<octave>4</octave>
 				</pitch>
-				<duration>1</duration>
-				<type>quarter</type>
-			</note>
-			<note>
-				<pitch>
-					<step>D</step>
-					<alter>0</alter>
-					<octave>4</octave>
-				</pitch>
-				<duration>2</duration>
+				<duration>4</duration>
 				<type>half</type>
 			</note>
 			<note>
@@ -102,7 +74,43 @@
 					<octave>4</octave>
 				</pitch>
 				<duration>2</duration>
-				<type>half</type>
+				<type>quarter</type>
+			</note>
+			<note>
+				<pitch>
+					<step>D</step>
+					<alter>0</alter>
+					<octave>4</octave>
+				</pitch>
+				<duration>2</duration>
+				<type>quarter</type>
+			</note>
+			<note>
+				<pitch>
+					<step>C</step>
+					<alter>0</alter>
+					<octave>4</octave>
+				</pitch>
+				<duration>2</duration>
+				<type>quarter</type>
+			</note>
+			<note>
+				<pitch>
+					<step>C</step>
+					<alter>0</alter>
+					<octave>4</octave>
+				</pitch>
+				<duration>8</duration>
+				<type>whole</type>
+			</note>
+			<note>
+				<pitch>
+					<step>C</step>
+					<alter>0</alter>
+					<octave>4</octave>
+				</pitch>
+				<duration>0.5</duration>
+				<type>eighth</type>
 			</note>
 		</measure>
 	</part>
