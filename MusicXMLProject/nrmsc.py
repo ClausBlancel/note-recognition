@@ -12,10 +12,10 @@ score = Score(title="Read from the Teensy", composer="Teensy")
 
 part = Part("Piano")
 score.append(part)
-score.export_to_file("test.xml")
+score.export_to_file("score.xml")
 
 
-tree = ET.parse('test.xml')
+tree = ET.parse('score.xml')
 root = tree.getroot()
 
 part = ET.Element("part")
@@ -98,7 +98,7 @@ def createNote(d, freq):
         lastMeasure.append(new_note)
 
     # print(len(lastMeasure))
-    tree.write("test.xml")
+    tree.write("score.xml")
 
 
 def modifierNote(d, freq):
@@ -112,7 +112,7 @@ def modifierNote(d, freq):
         # print("-----", listRhythm[d], "-----", freq)
         last_type.text = listRhythm[d]
         # Enregistrer les modifications dans le fichier XML
-        tree.write("test.xml")
+        tree.write("score.xml")
     else:
         print("Le fichier ne contient pas de notes.")
 
@@ -168,5 +168,5 @@ except:
     procModifyNote = threading.Thread(target=modifierNote,args=(4, lastFreq, ))
     procModifyNote.start()
 
-    # Open MuseScore with the test.xml file
-    os.startfile("test.xml")
+    # Open MuseScore with the score.xml file
+    os.startfile("score.xml")
