@@ -25,10 +25,15 @@ part.append(measure)
 root.append(part)
 
 
-tempo = 120
+tempo = 60
 timeBetweenCroche = (60 / tempo) / 2
 firstTime = True
+firstPeak = True
 lastFreq = 0
+global listRhythm
+listRhythm = {1: "eighth", 2: "quarter", 4: "half", 8: "whole"}
+
+# listAmpli = []
 
 
 def convertFreqToNote(freq):
@@ -39,18 +44,24 @@ def convertFreqToNote(freq):
     return noteInLetter + octaveOfTheNote
 
 
-def createNote(d, freq):   
+def createNote(d, freq):
     noteStr = convertFreqToNote(freq)
-    print(noteStr, freq)
-    print("---croche---", freq)
+    # print(noteStr, freq)
+    print("------ Nouvelle note :", noteStr, "------")
 
     new_note = ET.Element("note")
     pitch = ET.Element("pitch")
     step = ET.Element("step")
     alter = ET.Element("alter")
     octave = ET.Element("octave")
+    thisNote = listNote.index(noteStr[0])
+    thisOctave = int(noteStr[-1])
+    if thisNote < 5 and thisOctave <= 3:
+        thisOctave = thisOctave + 1
+
     step.text = noteStr[0]
-    octave.text = noteStr[-1]
+    octave.text = str(thisOctave)
+
     if len(noteStr) == 3:
         if noteStr[1] == '#':
             alter.text = "1"
@@ -68,6 +79,7 @@ def createNote(d, freq):
     new_note.append(pitch)
     new_note.append(duration)
     new_note.append(type)
+
     measure = root.findall("./part/measure")
     lastMeasure = measure[-1]
     lastMeasure.append(new_note)
@@ -82,9 +94,9 @@ def modifierNote(d, freq):
         last_duration = last_note.find("duration")
         last_duration.text = str(d)  # la nouvelle valeur de duration
         last_type = last_note.find("type")
-        listNote = {1: "eighth", 2 : "quarter", 4 : "half", 8 : "whole"}
-        print("-----", listNote[d], "-----", freq)
-        last_type.text = listNote[d]
+        # listRhythm = {1: "eighth", 2 : "quarter", 4 : "half", 8 : "whole"}
+        # print("-----", listRhythm[d], "-----", freq)
+        last_type.text = listRhythm[d]
         # Enregistrer les modifications dans le fichier XML
         tree.write("test.xml")
     else:
@@ -95,44 +107,50 @@ try:
         with serial.Serial('COM3', 9600, timeout=1) as ser:
             line = ser.readline()
             # print("line =", line)
-            
-        
-        if line != b'': 
+
+
+        if line != b'':
             line = str(line)[2:]
             line = line[:len(line)-3]
-            print(line)
+            # print(line)
             freq, proba, ampli, peak = line.split(",")
 
             freq = float(freq)
             proba = float(proba)
             ampli = float(ampli)
             peak = float(peak)
-                   
-            # print(timeBetweenNote, abs(thisNote - absoluteTimeNoteBefore))  
-            if peak > 0.9:     
-                if not firstTime:
-                    timeBetweenLastNoteDetected = absoluteTimeNoteBefore - time.time() 
-                    print("timeBetweenLastNoteDetected = ", abs(timeBetweenLastNoteDetected))
-                    nbTemps = round(abs(timeBetweenLastNoteDetected / timeBetweenCroche))
-                    if nbTemps in [2,4,8]:
+
+            # listAmpli.append(ampli)
+
+            # print(timeBetweenNote, abs(thisNote - absoluteTimeNoteBefore))
+            if peak == 1:
+                if not firstPeak:
+                    if not firstTime:
+                        timeBetweenLastNoteDetected = absoluteTimeNoteBefore - time.time()
+                        # print("timeBetweenLastNoteDetected = ", abs(timeBetweenLastNoteDetected), "/", timeBetweenCroche)
+                        nbTemps = round(abs(timeBetweenLastNoteDetected / timeBetweenCroche))
+                        if nbTemps in [2,4,8]:
+                            print("Longueur de la note : ", listRhythm[nbTemps])
+                            absoluteTimeNoteBefore = time.time()
+                            procModifyNote = threading.Thread(target=modifierNote,args=(int(nbTemps), lastFreq, ))
+                            procModifyNote.start()
+                        if nbTemps in [2,4,8] or abs(abs(timeBetweenLastNoteDetected) - timeBetweenCroche) < 0.06:
+                            absoluteTimeNoteBefore = time.time()
+                            procCreateNote = threading.Thread(target=createNote, args=(0.5, freq,))
+                            procCreateNote.start()
+                            lastFreq = freq
+                    else:
+                        lastFreq = freq
                         absoluteTimeNoteBefore = time.time()
-                        procModifyNote = threading.Thread(target=modifierNote,args=(int(nbTemps), lastFreq, )) 
-                        procModifyNote.start()
-                    if nbTemps in [1,2,4,8]:
-                        absoluteTimeNoteBefore = time.time()
+                        firstTime = False
                         procCreateNote = threading.Thread(target=createNote, args=(0.5, freq,))
                         procCreateNote.start()
-                        lastFreq = freq
-                else:
-                    lastFreq = freq
-                    absoluteTimeNoteBefore = time.time()
-                    firstTime = False
-                    procCreateNote = threading.Thread(target=createNote, args=(0.5, freq,))
-                    procCreateNote.start() 
-                
+                firstPeak = False
+            else:
+                firstPeak = True
                     
 except:
-    timeBetweenLastNoteDetected = absoluteTimeNoteBefore - time.time() 
-    nbTemps = round(abs(timeBetweenLastNoteDetected / timeBetweenCroche))
-    procModifyNote = threading.Thread(target=modifierNote,args=(nbTemps, lastFreq, ))
+    timeBetweenLastNoteDetected = absoluteTimeNoteBefore - time.time()
+    procModifyNote = threading.Thread(target=modifierNote,args=(4, lastFreq, ))
+    procModifyNote.start()
     
