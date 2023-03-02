@@ -1,3 +1,4 @@
+import os
 from math import log2
 from pymusicxml import *
 import serial
@@ -96,7 +97,7 @@ def createNote(d, freq):
         lastMeasure = measure[-1]
         lastMeasure.append(new_note)
 
-    print(len(lastMeasure))
+    # print(len(lastMeasure))
     tree.write("test.xml")
 
 
@@ -166,4 +167,6 @@ except:
     timeBetweenLastNoteDetected = absoluteTimeNoteBefore - time.time()
     procModifyNote = threading.Thread(target=modifierNote,args=(4, lastFreq, ))
     procModifyNote.start()
-    
+
+    # Open MuseScore with the test.xml file
+    os.startfile("test.xml")
