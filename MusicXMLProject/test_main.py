@@ -80,10 +80,23 @@ def createNote(d, freq):
     new_note.append(duration)
     new_note.append(type)
 
+    nbMeasure = 1
     measure = root.findall("./part/measure")
     lastMeasure = measure[-1]
-    lastMeasure.append(new_note)
+    # Create a new measure if the last one is full
+    if len(lastMeasure) == 4:
+        measure = ET.Element("measure")
+        measure.set("number", str(nbMeasure))
+        part.append(measure)
+        nbMeasure += 1
+        measure = root.findall("./part/measure")
+        lastMeasure = measure[-1]
+        lastMeasure.append(new_note)
+    else:
+        lastMeasure = measure[-1]
+        lastMeasure.append(new_note)
 
+    print(len(lastMeasure))
     tree.write("test.xml")
 
 
