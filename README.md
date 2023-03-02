@@ -7,7 +7,7 @@ To power up the Teensy, you need to connect it to a computer. Then connect a mic
 ## How does it work in a global way?
 The Teensy listens to the microphone and applies the Yin algorithm to find the fundamental frequency of the note being played. When it finds something, it sends it to the computer via the USB port. From the beginning, the Python script listens to the serial port and collects data from the Teensy.   
 
-Then, in real time, it creates the score using a musicXML file, which can be displayed as a real score on the web (https://www.soundslice.com/musicxml-viewer/) or with an application such as MuseScore.
+Then, in real time, it creates the score using a musicXML file, which can be displayed as a real score on the web (https://www.soundslice.com/musicxml-viewer/) or with an application such as MuseScore. In our case, we opened the file with MuseScore when we terminate the script.
 
 ## What is the Yin algorithm?
 Its purpose is to estimate the fundamental frequency of musical sounds. It has no upper limit on the frequency search range, is very fast and easy to use. It is based on autocorrelation.   
